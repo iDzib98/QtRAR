@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+while IFS= read -r file; do
+    [[ -n "$file" ]] || continue
+    QtRAR --test -- "$file"
+done <<< "${NAUTILUS_SCRIPT_SELECTED_FILE_PATHS:-}"

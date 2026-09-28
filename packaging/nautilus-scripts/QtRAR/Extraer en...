@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+files="${NAUTILUS_SCRIPT_SELECTED_FILE_PATHS:-}"
+[[ -n "$files" ]] || exit 0
+first="${files%%$'\n'*}"
+QtRAR --extract-to-dialog -- "$first"

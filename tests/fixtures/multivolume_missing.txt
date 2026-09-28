@@ -1,0 +1,17 @@
+
+UNRAR 7.23 freeware      Copyright (c) 1993-2026 Alexander Roshal
+
+Testing archive /tmp/tmp.dSj5a2eqXd/multi.part1.rar
+
+Testing     tmp/tmp.dSj5a2eqXd/volumen.bin                                33%
+
+Testing archive /tmp/tmp.dSj5a2eqXd/multi.part2.rar
+
+...         tmp/tmp.dSj5a2eqXd/volumen.bin                                66%
+
+Testing archive /tmp/tmp.dSj5a2eqXd/multi.part3.rar
+
+...         tmp/tmp.dSj5a2eqXd/volumen.bin                               100%
+Cannot find volume /tmp/tmp.dSj5a2eqXd/multi.part4.rar     
+tmp/tmp.dSj5a2eqXd/volumen.bin - checksum error
+Total errors: 2

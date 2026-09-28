@@ -1,0 +1,4 @@
+docs/weird'quote"dquote.txt
+docs/weird:name:colon.txt
+docs/notas.txt
+docs/manual.txt

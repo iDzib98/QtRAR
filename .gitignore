@@ -1,0 +1,35 @@
+# Binarios oficiales de rarlab: NO se versionan.
+# EULA rarlab 3.b/3.c prohibe distribuir la version de prueba de `rar` dentro de
+# otro paquete de software. Descargalos con tools/fetch-rar.sh.
+bin/
+!bin/.gitkeep
+
+# Ficheros generados
+build/
+build-*/
+_CPack_Packages/
+*.deb
+err.txt
+*.qm
+*.ts.tmp
+moc_*.cpp
+qrc_*.cpp
+ui_*.h
+
+# Configuracion de Qt Creator / CLion
+*.user
+*.autosave
+CMakeLists.txt.user*
+.cache/
+compile_commands.json
+
+# Claves de licencia: nunca deben entrar en el control de versiones
+rarreg.key
+.rarreg.key
+*.rarregkey
+
+# Mapas de exportacion de unrar (fuente de RARLAB, con licencia propia)
+*.map
+
+# Sistema
+.DS_Store

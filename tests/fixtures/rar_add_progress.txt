@@ -1,0 +1,15 @@
+
+RAR 7.23   Copyright (c) 1993-2026 Alexander Roshal   27 Jun 2026
+Trial version             Type 'rar -?' for help
+
+Evaluation copy. Please register.
+
+Creating archive /tmp/tmp.dSj5a2eqXd/progreso.rar
+
+Adding    readme.txt                                                       3%  OK 
+Adding    img/foto.png                                                    80%  OK 
+Adding    img/año_español (1).txt                                         80%  OK 
+Adding    img/nested/deep.bin                                            100%  OK 
+Adding    img/nested                                                       OK 
+Adding    img                                                              OK 
+Done

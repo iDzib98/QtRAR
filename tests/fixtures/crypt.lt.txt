@@ -1,0 +1,130 @@
+
+UNRAR 7.23 freeware      Copyright (c) 1993-2026 Alexander Roshal
+
+Archive: /tmp/tmp.dSj5a2eqXd/crypt.rar
+Details: RAR 5
+
+        Name: readme.txt
+        Type: File
+        Size: 800
+ Packed size: 48
+       Ratio: 6%
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: -rw-rw-r--
+   CRC32 MAC: 45228354
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=128k
+       Flags: encrypted 
+
+        Name: docs/weird'quote"dquote.txt
+        Type: File
+        Size: 1
+ Packed size: 16
+       Ratio: 1600%
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: -rw-rw-r--
+   CRC32 MAC: 15F51FBE
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=128k
+       Flags: encrypted 
+
+        Name: docs/weird:name:colon.txt
+        Type: File
+        Size: 1
+ Packed size: 16
+       Ratio: 1600%
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: -rw-rw-r--
+   CRC32 MAC: A87CD690
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=128k
+       Flags: encrypted 
+
+        Name: docs/notas.txt
+        Type: File
+        Size: 6
+ Packed size: 32
+       Ratio: 533%
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: -rw-rw-r--
+   CRC32 MAC: 2B083974
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=128k
+       Flags: encrypted 
+
+        Name: docs/manual.txt
+        Type: File
+        Size: 7
+ Packed size: 32
+       Ratio: 457%
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: -rw-rw-r--
+   CRC32 MAC: F0DC9421
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=128k
+       Flags: encrypted 
+
+        Name: img/foto.png
+        Type: File
+        Size: 20000
+ Packed size: 20096
+       Ratio: 100%
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: -rw-rw-r--
+   CRC32 MAC: A062284E
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=128k
+       Flags: encrypted 
+
+        Name: img/año_español (1).txt
+        Type: File
+        Size: 19
+ Packed size: 32
+       Ratio: 168%
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: -rw-rw-r--
+   CRC32 MAC: 3B822C5C
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=128k
+       Flags: encrypted 
+
+        Name: img/nested/deep.bin
+        Type: File
+        Size: 5000
+ Packed size: 5056
+       Ratio: 101%
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: -rw-rw-r--
+   CRC32 MAC: 78FECEFC
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=128k
+       Flags: encrypted 
+
+        Name: img/nested
+        Type: Directory
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: drwxrwxr-x
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m0
+
+        Name: docs
+        Type: Directory
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: drwxrwxr-x
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m0
+
+        Name: img
+        Type: Directory
+       mtime: 2026-09-25 15:59:53,905850623
+  Attributes: drwxrwxr-x
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m0
+
+        Name: empty
+        Type: Directory
+       mtime: 2026-09-25 15:59:53,901850623
+  Attributes: drwxrwxr-x
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m0
+

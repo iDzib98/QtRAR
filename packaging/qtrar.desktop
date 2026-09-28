@@ -1,0 +1,30 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=QtRAR
+GenericName=Gestor de archivos comprimidos
+Comment=Abrir, probar y extraer archivos RAR y ZIP
+TryExec=QtRAR
+Exec=QtRAR -- %f
+Icon=qtrar
+Terminal=false
+Categories=Utility;Archiving;FileTools;
+MimeType=application/vnd.rar;application/x-rar;application/rar;application/x-rar-compressed;application/zip;
+Keywords=rar;zip;archivar;comprimir;extraer;descomprimir;
+StartupNotify=true
+Actions=ExtractHere;ExtractTo;Test;
+
+[Desktop Action ExtractHere]
+Name=Extraer aquí
+Name[en]=Extract Here
+Exec=QtRAR --extract-here -- %f
+
+[Desktop Action ExtractTo]
+Name=Extraer en...
+Name[en]=Extract to...
+Exec=QtRAR --extract-to-dialog -- %f
+
+[Desktop Action Test]
+Name=Comprobar archivo
+Name[en]=Test archive
+Exec=QtRAR --test -- %f

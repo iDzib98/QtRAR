@@ -1,0 +1,17 @@
+
+UNRAR 7.23 freeware      Copyright (c) 1993-2026 Alexander Roshal
+
+Archive: /tmp/tmp.dSj5a2eqXd/multi.part1.rar
+Details: RAR 5, volume 1
+
+        Name: tmp/tmp.dSj5a2eqXd/volumen.bin
+        Type: File
+        Size: 400000
+ Packed size: 102196
+       Ratio: -->
+       mtime: 2026-09-25 15:59:54,069850623
+  Attributes: -rw-rw-r--
+  Pack-CRC32: 87C68E26
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m3 -md=512k
+

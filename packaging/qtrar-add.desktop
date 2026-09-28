@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=application/octet-stream;inode/directory;
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=QtRAR
+Actions=AddToArchive;
+
+[Desktop Action AddToArchive]
+Name=Añadir a un archivo...
+Name[en]=Add to archive...
+Exec=QtRAR --add-to-archive -- %F

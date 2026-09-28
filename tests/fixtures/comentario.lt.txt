@@ -1,0 +1,22 @@
+
+UNRAR 7.23 freeware      Copyright (c) 1993-2026 Alexander Roshal
+
+Archive comment:
+Hola
+Esta es la segunda linea.
+
+
+Archive: simple.rar
+Details: RAR 5
+
+        Name: fichero.txt
+        Type: File
+        Size: 10
+ Packed size: 10
+       Ratio: 100%
+       mtime: 2026-09-25 16:24:41,533844949
+  Attributes: -rw-rw-r--
+       CRC32: F2BDCD07
+     Host OS: Unix
+ Compression: RAR 5.0(v50) -m0 -md=128k
+

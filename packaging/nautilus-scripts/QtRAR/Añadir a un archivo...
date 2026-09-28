@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[[ -n "${NAUTILUS_SCRIPT_SELECTED_FILE_PATHS:-}" ]] || exit 0
+mapfile -t files <<< "${NAUTILUS_SCRIPT_SELECTED_FILE_PATHS:-}"
+if ((${#files[@]})); then
+    QtRAR --add-to-archive -- "${files[@]}"
+fi
