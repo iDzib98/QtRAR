@@ -1,0 +1,137 @@
+name: Release
+
+# Publica un .deb y un AppImage cuando se empuja un tag tipo v0.1.0.
+#
+# PasosManual de publicacion: docs/RELEASING.md. El tag tiene que coincidir con
+# la version de CMakeLists.txt; si no, este workflow falla en vez de publicar
+# un .deb que dice una cosa y el tag otra.
+#
+# El AppImage lleva Qt dentro, que es LGPL: por eso se escribe la LGPL-3 dentro
+# del paquete, y el usuario puede sustituir las bibliotecas de usr/lib por otras
+# de la misma licencia. El .deb enlaza con el Qt del sistema, que es la via
+# preferible de la LGPL.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag a publicar (debe existir ya en origin)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Construir y publicar
+    runs-on: ubuntu-24.04
+    env:
+      # LinuxDeployAppImage no debe intentar arrancar la aplicacion: no hay
+      # pantalla en el runner.
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - name: Obtener el codigo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Instalar Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: "6.8.2"
+          cache: true
+
+      - name: Instalar dependencias de empaquetado
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            build-essential cmake ninja-build patchelf file \
+            desktop-file-utils librsvg2-bin fuse libc6-dev
+
+      - name: Resolver el tag
+        # Con `workflow_dispatch` GITHUB_REF_NAME es la rama, no el tag, asi que
+        # no sirve usar el para comprobar la version ni para crear la release.
+        run: |
+          tag="${{ github.event.inputs.tag || github.ref_name }}"
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+          echo "publicando $tag"
+
+      - name: Comprobar que el tag coincide con la version
+        run: |
+          # `project()` esta partido en varias lineas, asi que no vale un sed de
+          # una linea: se lee el bloque entero, como hace el script de AppImage.
+          version=$(awk '/^project\(QtRAR/ { p = 1 } p && /VERSION/ { gsub(/[^0-9.]/, ""); print; exit }' CMakeLists.txt)
+          sin_v="${TAG#v}"
+          if [ -z "$version" ] || [ "$version" != "$sin_v" ]; then
+            echo "::error::el tag pide la version '$sin_v' pero CMakeLists.txt dice '$version'"
+            exit 1
+          fi
+          echo "version=$version"
+
+      - name: Construir el .deb
+        run: |
+          cmake -S . -B build-deb -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DQTRAR_FETCH_RAR=OFF \
+            -DQTRAR_BUNDLE_UNRAR=ON
+          cmake --build build-deb --parallel
+          ctest --test-dir build-deb --output-on-failure
+          cd build-deb && cpack -G DEB
+
+      - name: Construir el AppImage
+        run: |
+          chmod +x packaging/appimage/build-appimage.sh
+          # install-qt-action deja el SDK en QT_ROOT_DIR, con la disposicion que
+          # espera el desplegador (incluidos mkspecs/modules/*.pri).
+          ./packaging/appimage/build-appimage.sh
+
+      - name: Comprobar que los paquetes no llevan `rar`
+        run: |
+          # `rar` es una version de prueba que la licencia de RARLAB prohibe
+          # redistribuir. `unrar` si se puede. Si esto falla, no se publica nada.
+          if dpkg-deb -c build-deb/*.deb | grep -E '/rar$|\.key$'; then
+            echo "::error::el .deb contiene rar o una clave de licencia"
+            exit 1
+          fi
+          if ! dpkg-deb -c build-deb/*.deb | grep -q '/unrar$'; then
+            echo "::error::el .deb no incluye unrar"
+            exit 1
+          fi
+          # Se extrae en un directorio propio para no ensuciar el workspace.
+          mkdir -p "$RUNNER_TEMP/extract"
+          cd "$RUNNER_TEMP/extract"
+          "$GITHUB_WORKSPACE"/dist/*.AppImage --appimage-extract > /dev/null
+          if find squashfs-root -name rar -o -name '*.key' -o -name 'rarreg*' | grep .; then
+            echo "::error::el AppImage contiene rar o una clave de licencia"
+            exit 1
+          fi
+          # --version no debe arrancar ventana: aqui no hay pantalla.
+          env -u DISPLAY -u WAYLAND_DISPLAY -u QT_QPA_PLATFORM \
+            "$GITHUB_WORKSPACE"/dist/*.AppImage --version
+
+      - name: Calcular sumas de comprobacion
+        run: |
+          cp build-deb/*.deb dist/
+          cd dist
+          sha256sum ./*.deb ./*.AppImage > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Crear la release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Si la release ya existe (reejecutado a mano) se sube encima en vez de
+          # fallar: interesa que la segunda ejecucion tambien termine en verde.
+          gh release create "$TAG" \
+            --title "QtRAR ${TAG#v}" \
+            --generate-notes \
+            dist/*.deb dist/*.AppImage dist/SHA256SUMS \
+            || gh release upload "$TAG" \
+                 dist/*.deb dist/*.AppImage dist/SHA256SUMS --clobber

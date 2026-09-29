@@ -70,6 +70,25 @@ sudo apt install build-essential cmake qt6-base-dev qt6-tools-dev-tools \
 
 ## Installation
 
+Binaries are published in the [GitHub releases](https://github.com/iDzib98/QtRAR/releases).
+
+| Package | Who it is for |
+| --- | --- |
+| `QtRAR-<version>-x86_64.AppImage` | Any 64-bit Linux. No Qt or anything else needed: `chmod +x` and run. |
+| `qtrar_<version>_amd64.deb` | Debian, Ubuntu and derivatives. |
+
+### AppImage
+
+```sh
+chmod +x QtRAR-0.1.0-x86_64.AppImage
+./QtRAR-0.1.0-x86_64.AppImage
+```
+
+Qt is bundled inside, so it works on a machine without Qt installed. The
+libraries live in `usr/lib/`: if one of them ever misbehaves, you can delete it
+and drop in your own build of the same version (see
+[RAR binaries and licensing](#rar-binaries-and-licensing)).
+
 ### Debian package
 
 Download the published `.deb` and run:
@@ -235,6 +254,7 @@ a window. See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 | [`docs/TRANSLATING.md`](docs/TRANSLATING.md) | How to add or fix a translation. |
 | [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to contribute, code style, tests, review process. |
 | [`CHANGELOG.md`](CHANGELOG.md) | Version history. |
+| [`docs/RELEASING.md`](docs/RELEASING.md) | How a release is published (tag, workflow, packages). |
 | [`packaging/README-deb.md`](packaging/README-deb.md) | Building the Debian package. |
 | [`packaging/README-context-menu.md`](packaging/README-context-menu.md) | Context menus and MIME types. |
 | [`tests/fixtures/README.md`](tests/fixtures/README.md) | How the fixtures are captured and what they are for. |

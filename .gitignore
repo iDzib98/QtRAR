@@ -11,8 +11,10 @@ bin/*
 # Ficheros generados
 build/
 build-*/
+dist/
 _CPack_Packages/
 *.deb
+*.AppImage
 err.txt
 *.qm
 *.ts.tmp

@@ -1,0 +1,10 @@
+#!/bin/sh
+# AppRun del AppImage de QtRAR.
+#
+# El AppImage guarda todo dentro de `usr/`, y QtRAR ya busca `unrar` y las
+# traducciones en las carpetas que hay junto al ejecutable, asi que solo hace
+# falta arrancar el binario de ahi. `readlink -f` cubre que se invoque a traves
+# de un enlace simbolico.
+set -e
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/bin/QtRAR" "$@"
