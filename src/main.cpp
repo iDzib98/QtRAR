@@ -6,10 +6,48 @@
 #include <QApplication>
 #include <QDir>
 #include <QFileInfo>
+#include <QLatin1String>
 #include <QTextStream>
 #include <QTimer>
 
 namespace {
+
+/// ¿Esta invocación va a terminar sin abrir ninguna ventana?
+///
+/// El constructor de `QApplication` carga el plugin de plataforma, así que sin
+/// un servidor gráfico el proceso aborta con "could not connect to display"
+/// ANTES de que el parser llegue a ver `--version`. Estas opciones se usan desde
+/// scripts, desde menús contextuales y desde integración continua, donde no hay
+/// nadie mirando: tienen que funcionar sin display.
+bool isWindowlessAction(int argc, char *argv[])
+{
+    static const char *const opciones[] = {
+        "-h", "--help", "-v", "--version", "--dump",
+        "--test", "--extract-here", "--extract-to",
+    };
+    for (int i = 1; i < argc; ++i) {
+        const QLatin1String arg(argv[i]);
+        for (const char *opcion : opciones) {
+            if (arg == QLatin1String(opcion))
+                return true;
+        }
+    }
+    return false;
+}
+
+/// Si no hay donde dibujar y esta ejecucion no va a abrir una ventana, se usa
+/// la plataforma `offscreen`. Solo entonces, y nunca pisando una eleccion
+/// explicita: con servidor grafico de por medio el comportamiento no cambia.
+void useHeadlessPlatformIfNeeded(int argc, char *argv[])
+{
+    if (!qEnvironmentVariableIsEmpty("QT_QPA_PLATFORM")
+        || !qEnvironmentVariableIsEmpty("DISPLAY")
+        || !qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")) {
+        return;
+    }
+    if (isWindowlessAction(argc, argv))
+        qputenv("QT_QPA_PLATFORM", "offscreen");
+}
 
 /// Monta la peticion sin interfaz. Las opciones vienen del parser de
 /// `Application` y las sondas de pruebas del entorno, pero todas entran por el
@@ -47,6 +85,11 @@ qtrar::ProbeRequest probeRequest(const qtrar::Application &app, const QString &a
 
 int main(int argc, char *argv[])
 {
+    // Antes del `QApplication`: su constructor inicializa la plataforma
+    // grafica y, si no hay display, el proceso muere aqui sin llegar a
+    // imprimir la version.
+    useHeadlessPlatformIfNeeded(argc, argv);
+
     qtrar::Application app(argc, argv);
 
     if (!app.setup(app.arguments()))

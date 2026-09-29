@@ -109,6 +109,18 @@ comprobar "--extract-to-dialog sin archivo avisa" 1 $?
 "$QT" --add-to-archive >/dev/null 2>&1
 comprobar "--add-to-archive sin selección avisa" 1 $?
 
+echo "== Version y ayuda sin servidor gráfico =="
+# El constructor de QApplication carga el plugin de plataforma, así que estas
+# opciones tienen que resolverlo solas: si alguien las rompe, el proceso aborta
+# con "could not connect to display" en vez de imprimir la version.
+for opcion in --version --help; do
+    env -u DISPLAY -u WAYLAND_DISPLAY -u QT_QPA_PLATFORM "$QT" "$opcion" >/dev/null 2>&1
+    comprobar "$opcion sin display" 0 $?
+done
+env -u DISPLAY -u WAYLAND_DISPLAY -u QT_QPA_PLATFORM "$QT" --version 2>/dev/null \
+    | grep -q 'QtRAR'
+comprobar "--version imprime el nombre" 0 $?
+
 echo "== Crear =="
 rm -f "$TRAB/nuevo.rar"
 QTRAR_CREATE="$TRAB/nuevo.rar" QTRAR_CREATE_FILES="$TRAB/src/a.txt" "$QT" >/dev/null 2>&1
