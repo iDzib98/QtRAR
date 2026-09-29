@@ -1,0 +1,64 @@
+name: Idea o mejora
+description: Una función que echas de menos, o algo que se podría hacer mejor
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Las ideas son bienvenidas aunque no se lleguen a implementar. No hace
+        falta que traigas una solución; una descripción clara ya ayuda.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Qué te gustaría poder hacer
+      description: La situación concreta, no la solución.
+    validations:
+      required: true
+
+  - type: textarea
+    id: ahora
+    attributes:
+      label: Cómo se hace ahora
+      description: Con la interfaz, la terminal, otro programa...
+
+  - type: dropdown
+    id: donde
+    attributes:
+      label: En qué parte de la aplicación
+      multiple: true
+      options:
+        - Abrir y navegar
+        - Extraer
+        - Crear
+        - Modificar (borrar, renombrar, comentar, proteger)
+        - Buscar, asistente e información
+        - Barra de herramientas y menús
+        - Integración con el explorador de archivos
+        - Línea de órdenes
+        - Temas, iconos e idioma
+        - Empaquetado e instalación
+        - Otro
+    validations:
+      required: false
+
+  - type: textarea
+    id: propuesta
+    attributes:
+      label: Cómo lo harías
+      description: Si lo has pensado, aunque sea a medias. Vale más un intento que un "no sabría".
+
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: ¿Hay algo que ya lo haga?
+      description: Un programa, una extensión, una opción de RAR...
+
+  - type: checkboxes
+    id: busqueda
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: He buscado en las incidencias ideas parecidas.
+          required: true
+        - label: Sé que esto es una petición, no un fallo.

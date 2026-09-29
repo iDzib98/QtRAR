@@ -1,0 +1,84 @@
+name: Informe de fallo
+description: Algo no funciona, o funciona de una forma que no esperabas
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gracias por el informe. Con la versión, los pasos y la salida del
+        terminal se puede reproducir casi cualquier cosa.
+
+        Si el fallo tiene datos personales o de terceros, usa archivos de
+        prueba sintéticos: valen para diagnosticar y sirven a los demás.
+
+  - type: textarea
+    id: que-pasa
+    attributes:
+      label: Qué falla
+      description: Qué esperabas y qué ocurrió.
+    validations:
+      required: true
+
+  - type: textarea
+    id: pasos
+    attributes:
+      label: Pasos para reproducirlo
+      value: |
+        1.
+        2.
+        3.
+      placeholder: |
+        1. Abrir /home/usuario/archivo.rar
+        2. Pulsar "Extraer en..."
+        3. Dejar el resto en sus valores por defecto
+    validations:
+      required: true
+
+  - type: textarea
+    id: salida
+    attributes:
+      label: Salida del terminal
+      description: Pega lo que imprimió la aplicación, si imprimió algo.
+      render: text
+
+  - type: input
+    id: version
+    attributes:
+      label: Versión de QtRAR
+      description: La salida de `QtRAR --version`.
+      placeholder: "QtRAR 0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: binarios
+    attributes:
+      label: Binarios de RAR
+      description: "La salida de `rar -iver` y de `unrar`."
+      placeholder: |
+        UNRAR 7.23 freeware
+        UNRAR 7.23
+    validations:
+      required: true
+
+  - type: input
+    id: sistema
+    attributes:
+      label: Sistema
+      description: Distribución, versión de Qt (`qdpkg-query -W qt6-base` o `qmake6 -query QT_VERSION`) y arquitectura.
+      placeholder: "Debian 12, Qt 6.4.2, x86_64"
+
+  - type: textarea
+    id: adjuntos
+    attributes:
+      label: ¿Hay un archivo que lo dispare?
+      description: Con nombres genéricos, sin datos personales.
+
+  - type: checkboxes
+    id: busqueda
+    attributes:
+      label: Antes de enviar
+      options:
+        - label: He buscado en las incidencias abiertas por algo parecido.
+          required: true
+        - label: He comprobado que el fallo ocurre con la última versión.

@@ -1,7 +1,11 @@
 # Binarios oficiales de rarlab: NO se versionan.
 # EULA rarlab 3.b/3.c prohibe distribuir la version de prueba de `rar` dentro de
 # otro paquete de software. Descargalos con tools/fetch-rar.sh.
-bin/
+#
+# Se excluye el *contenido* de bin/ y no la carpeta entera: git no puede volver
+# a incluir un fichero si su directorio padre esta excluido, asi que con
+# `bin/` arriba el `!bin/.gitkeep` de abajo no tendria efecto.
+bin/*
 !bin/.gitkeep
 
 # Ficheros generados

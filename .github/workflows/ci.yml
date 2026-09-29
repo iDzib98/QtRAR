@@ -1,0 +1,81 @@
+name: CI
+
+# Comprueba lo que se puede comprobar sin los binarios de RARLAB: el
+# binario de RAR es una version de prueba que su licencia prohibe
+# redistribuir, asi que la prueba de extremo a extremo (tools/e2e-test.sh)
+# no puede correr aqui. Para eso hace falta bin/rar, y ya lo tienen quien
+# despliega la aplicacion.
+#
+# Esta integracion continua NO sustituye a la revision humana: es la puerta
+# minima para que un cambio llegue a main con lo basico comprobado.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Compilar y probar (Qt ${{ matrix.qt }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # La version con la que se desarrolla. Anadir mas cuando CMake
+        # exija un minimo superior (cmake_minimum_required en CMakeLists.txt).
+        qt: ["6.8.2"]
+
+    steps:
+      - name: Obtener el codigo
+        uses: actions/checkout@v4
+
+      - name: Instalar Qt ${{ matrix.qt }}
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ matrix.qt }}
+          cache: true
+
+      - name: Configurar
+        run: >
+          cmake -S . -B build
+          -DCMAKE_BUILD_TYPE=Release
+          -DQTRAR_FETCH_RAR=OFF
+          -DCMAKE_CXX_FLAGS="-Wall -Wextra"
+
+      - name: Compilar
+        run: cmake --build build --parallel
+
+      - name: Tests (nucleo e interfaz, sin pantalla)
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: ctest --test-dir build --output-on-failure
+
+      - name: Comprobar traducciones
+        run: python3 tools/check-i18n.py
+
+      - name: Comprobar iconos
+        run: python3 tools/check-icons.py build
+
+      - name: Instalar en un directorio temporal
+        run: cmake --install build --prefix "$RUNNER_TEMP/qtrar"
+
+      - name: Comprobar que la aplicacion responde
+        run: |
+          "$RUNNER_TEMP/qtrar/bin/QtRAR" --version
+          # --help y --version no deben arrancar una ventana ni pedir nada.
+          "$RUNNER_TEMP/qtrar/bin/QtRAR" --help > /dev/null
+
+      - name: Subir el ejecutable
+        uses: actions/upload-artifact@v4
+        with:
+          name: qtrar-ubuntu-24.04
+          path: ${{ runner.temp }}/qtrar/bin/QtRAR
+          if-no-files-found: error

@@ -2,7 +2,7 @@
 #
 # Descarga los binarios oficiales de RAR para Linux x64 de rarlab.com.
 #
-# AVISO DE LICENCIA (ver licenses/rar-license.txt, EULA rarlab §3.b/§3.c):
+# AVISO DE LICENCIA (ver licenses/license.txt, EULA rarlab §3.b/§3.c):
 #   - El binario `rar` NO puede distribuirse dentro de otro paquete de software.
 #     Por eso `bin/` esta en .gitignore y este script es una herramienta de
 #     DESARROLLO, no parte de la release de QtRAR.

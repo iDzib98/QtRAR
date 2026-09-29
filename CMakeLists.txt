@@ -219,6 +219,26 @@ install(FILES
     licenses/license.txt
     licenses/acknow.txt
     DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/qtrar)
+# Documentacion del proyecto. `licenses/license.txt` y `acknow.txt` NO son la
+# licencia de QtRAR: son los textos de RARLAB, que se instalan arriba porque su
+# EULA obliga a acompanar a sus componentes. La licencia de QtRAR esta en la
+# raiz del repositorio.
+#
+# Ojo con los nombres: todo va al mismo directorio, asi que dos ficheros
+# llamados README.md se pisarian en silencio y el paquete acabaria con la
+# licencia de terceros en lugar del README.
+install(FILES
+    README.md
+    CONTRIBUTING.md
+    CHANGELOG.md
+    docs/ARCHITECTURE.md
+    docs/TRANSLATING.md
+    licenses/THIRD-PARTY-NOTICES.md
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/qtrar)
+# Debian busca el aviso de derechos de autor en `copyright`, no en `LICENSE`.
+install(FILES LICENSE
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/qtrar
+    RENAME copyright)
 
 # ---------------------------------------------------------------------------
 # Traducciones: es + en desde el primer commit
