@@ -75,6 +75,12 @@ jobs:
           fi
           echo "version=$version"
 
+      - name: Obtener unrar
+        # `bin/` esta en .gitignore, asi que el runner no lo tiene y
+        # QTRAR_FETCH_RAR va en OFF para que la build sea reproducible. Sin este
+        # paso, `unrar` no llega a empaquetarse y la release sale sin el.
+        run: bash tools/fetch-rar.sh bin
+
       - name: Construir el .deb
         run: |
           cmake -S . -B build-deb -G Ninja \
@@ -85,25 +91,40 @@ jobs:
           ctest --test-dir build-deb --output-on-failure
           cd build-deb && cpack -G DEB
 
+      - name: Comprobar que el .deb lleva unrar y no rar
+        # Antes de la AppImage: si esto falla, mejor saberlo ya y no gastar diez
+        # minutos desplegando Qt para descubrir al final que faltaba unrar.
+        run: |
+          dpkg-deb -c build-deb/*.deb | grep -E '/rar$|\.key$' && {
+            echo "::error::el .deb contiene rar o una clave de licencia"; exit 1; }
+          dpkg-deb -c build-deb/*.deb | grep -q '/unrar$' || {
+            echo "::error::el .deb no incluye unrar"; exit 1; }
+          echo "el .deb lleva unrar y no lleva rar"
+
       - name: Construir el AppImage
         run: |
           chmod +x packaging/appimage/build-appimage.sh
           # install-qt-action deja el SDK en QT_ROOT_DIR, con la disposicion que
           # espera el desplegador (incluidos mkspecs/modules/*.pri).
           ./packaging/appimage/build-appimage.sh
+        # Sin esto, un fallo solo dice "exit 1" y no hay forma de saber si fue el
+        # despliegue de Qt, appimagetool o la comprobacion final.
+      - name: Subir el log del AppImage si algo falla
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: appimage-log
+          path: |
+            build-appimage/*.log
+            dist/
+          if-no-files-found: ignore
 
       - name: Comprobar que los paquetes no llevan `rar`
         run: |
           # `rar` es una version de prueba que la licencia de RARLAB prohibe
           # redistribuir. `unrar` si se puede. Si esto falla, no se publica nada.
-          if dpkg-deb -c build-deb/*.deb | grep -E '/rar$|\.key$'; then
-            echo "::error::el .deb contiene rar o una clave de licencia"
-            exit 1
-          fi
-          if ! dpkg-deb -c build-deb/*.deb | grep -q '/unrar$'; then
-            echo "::error::el .deb no incluye unrar"
-            exit 1
-          fi
+          # El .deb ya se comprobo antes de construir el AppImage; aqui esta el
+          # AppImage, que es el que sale del script.
           # Se extrae en un directorio propio para no ensuciar el workspace.
           mkdir -p "$RUNNER_TEMP/extract"
           cd "$RUNNER_TEMP/extract"

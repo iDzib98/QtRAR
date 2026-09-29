@@ -96,6 +96,15 @@ fi
 # El prefijo tiene que ser /usr porque es donde el runtime de AppImage espera
 # encontrar la aplicacion, y el RPATH tiene que ser relativo: si la aplicacion
 # guardase rutas absolutas, solo funcionaria en la maquina donde se compilo.
+# `unrar` viene de bin/, que no se versiona. En una maquina limpia no esta, y
+# sin el paquete sale incompleto sin que nada falle al compilar; el aviso de
+# CMake se dispararia, pero es mejor descargarlo y seguir. En CI esto es lo unico
+# que funciona: el runner nunca tiene bin/.
+if [ ! -x "$RAIZ/bin/unrar" ]; then
+    echo "==> descargando unrar (falta en bin/)"
+    bash "$RAIZ/tools/fetch-rar.sh" "$RAIZ/bin"
+fi
+
 echo "==> compilando ($VERSION)"
 rm -rf "$APPDIR"
 cmake -S "$RAIZ" -B "$BUILD" \
@@ -249,7 +258,15 @@ if command -v desktop-file-validate >/dev/null 2>&1; then
     desktop-file-validate "$APPDIR/qtrar.desktop" || true
 fi
 # appimagetool es un AppImage: en contenedores sin FUSE hay que extraerlo.
-APPIMAGE_EXTRACT_AND_RUN=1 "$QTRAR_APPIMAGETOOL" --no-appstream "$APPDIR" "$APPIMAGE" > /dev/null
+# Su salida se guarda para poder enseña si falla: sin esto, un fallo aqui sale
+# como un "command not found" sin pistas de la causa real.
+log_appimagetool="$BUILD/appimagetool.log"
+if ! APPIMAGE_EXTRACT_AND_RUN=1 "$QTRAR_APPIMAGETOOL" --no-appstream "$APPDIR" "$APPIMAGE" \
+        > "$log_appimagetool" 2>&1; then
+    echo "error: appimagetool no pudo construir la imagen. Su salida:" >&2
+    tail -30 "$log_appimagetool" >&2
+    exit 1
+fi
 chmod +x "$APPIMAGE"
 
 # --- 6. Comprobar que la imagen funciona ------------------------------------

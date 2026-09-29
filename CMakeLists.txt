@@ -190,9 +190,18 @@ target_link_libraries(QtRAR PRIVATE
 # Solo unrar puede distribuirse junto a la aplicacion (EULA rarlab 3.a).
 # `rar` nunca se empaqueta: el script tools/fetch-rar.sh lo deja en bin/ para
 # desarrollo y el usuario lo instala por su cuenta.
-if(QTRAR_BUNDLE_UNRAR AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/bin/unrar")
-    install(PROGRAMS "${CMAKE_CURRENT_SOURCE_DIR}/bin/unrar"
-            DESTINATION ${CMAKE_INSTALL_BINDIR})
+if(QTRAR_BUNDLE_UNRAR)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/bin/unrar")
+        install(PROGRAMS "${CMAKE_CURRENT_SOURCE_DIR}/bin/unrar"
+                DESTINATION ${CMAKE_INSTALL_BINDIR})
+    else()
+        # Sin este aviso el fallo es invisible: el paquete sale sin unrar y nada
+        # falla hasta que alguien lo nota al abrir un RAR. Suele passar en CI,
+        # donde `bin/` no existe y QTRAR_FETCH_RAR va en OFF.
+        message(FATAL_ERROR
+            "QTRAR_BUNDLE_UNRAR=ON pero no hay bin/unrar. "
+            "Ejecuta tools/fetch-rar.sh, o quita la opcion.")
+    endif()
 endif()
 
 # ---------------------------------------------------------------------------
